@@ -76,7 +76,7 @@ const a = 10  // 报错提示我们定义了变量但未使用
 现在又有一个了问题：文件这么多，我要一个一个文件的去看、去修改吗？为了能够快速将所有文件都格式化成统一风格，我们在package.json里增加一个脚本
 ```json
 "scripts": {
-    "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix"
+    "lint": "eslint src/**/*.{js,jsx,vue,ts,tsx} --fix",
 },
 ```
 ### 设置保存自动格式化代码
@@ -151,7 +151,7 @@ dist
 在package.json增加命令
 ```json
 "scripts": {
-    "lint:style": "stylelint \"./**/*.{css,less,vue,html}\" --fix"
+    "lint:style": "stylelint src/**/*.{css,scss,vue,html} --fix",
 },
 ```
 ## 配置husky
@@ -174,3 +174,13 @@ npx mrm@2 lint-staged
   "*.{scss,css}": "pnpm lint:style"
 }
 ```
+测试，在main.ts文件定义一个变量不使用，使其不符合规范，使用git commit时会报错，删除这个变量，重新推送成功
+```ts
+// main.ts增加未使用变量
+const test = 1
+```
+```git
+git add .
+git commit -m "init config"  // error  'test' is assigned a value but never used  no-unused-vars
+```
+
