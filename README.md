@@ -14,6 +14,19 @@ cd vite-vue-demo
 pnpm i
 pnpm dev
 ```
+## 使用github管理代码
+在项目根目录执行命令进行git初始化
+```shell
+git init
+```
+注册一个github账号，新增一个仓库命名为我们的演示项目的名字vite-vue-demo,根据提示关联到远端仓库并推送代码
+```shell
+git add .
+git commit -m "init"
+git remote add origin git@github.com:hu3dao/vite-vue-demo.git
+git push -u origin master
+```
+刷新github，就可以看到代码已经成功推送了
 ## 配置eslint
 为了保证团队内代码风格统一，使用eslint对代码进行校验和格式化
 ### 安装eslint
@@ -253,6 +266,114 @@ feat(eslint): 集成eslint
 
 可浏览README文件了解细节
 ```
+## 集成VueRouter
+### 安装依赖
+目前VueRouter默认版本为v4.x，直接vue3，所以我们直接安装即可，[VueRouter官方文档](https://router.vuejs.org/zh/installation.html)
+```shell
+pnpm add vue-router
+```
+### 目录说明
+在src文件夹下新建router文件夹用来管理路由相关的配置，目录如下
+```xml
+.
+├── src # 主目录
+│   ├── main.js # 主入口
+│   ├── router # 路由配置
+│   │   ├── guard # 路由守卫
+│   │   ├── modules # 路由模块
+│   │   └── index.ts # router出口
+│   └── views # 页面
+```
+关于路由表，建议根据功能的不同来拆分到 modules 文件夹中
 
-    
+这样做的好处是：
++ 方便后期维护
++ 减少 Git 合并代码时的冲突的可能
+### 使用
+在views新建home文件夹和login文件夹并在各自文件夹新建一个vue文件，编写测试代码
+```vue
+// home/index.vue
+<script lang='ts' setup>
+</script>
 
+<template>
+  首页
+</template>
+
+<style scoped>
+</style>
+```
+```vue
+// login/index.vue
+<script lang='ts' setup>
+</script>
+
+<template>
+  登录页
+</template>
+
+<style scoped>
+</style>
+```
+在modules新建三个文件：common.modules.ts、user.modules.ts、index.ts，xxx.modules.ts是每个模块的路由表，index.ts是整个路由表的出口，用于汇总全部的路由。
+```ts
+// common.modules.ts  公共模块路由表
+import type { RouteRecordRaw } from 'vue-router'
+import Home from '@/views/home/index.vue'
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  }
+]
+
+export default routes
+```
+```ts
+// user.modules.ts  用户模块路由表
+import type { RouteRecordRaw } from 'vue-router'
+import Login from '@/views/login/index.vue'
+
+const routes:RouteRecordRaw[] = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  }
+]
+
+export default routes
+```
+```ts
+// index.ts  路由表出口
+import userRouteModules from './user.modules'
+import commonRouteModules from './common.modules'
+
+export default [...commonRouteModules, ...userRouteModules]
+```
+在router文件夹下新建index.ts文件，作为路由模块的出口
+```ts
+// router/index.ts
+import { createRouter, createWebHashHistory } from 'vue-router'
+import routes from './modules'
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
+
+export default router
+```
+在主入口mian.ts注入router，运行pnpm dev，访问
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from '@/router'
+
+const app = createApp(App)
+app.use(router)
+app.mount('#app')
+```
+## 集成Pinia
