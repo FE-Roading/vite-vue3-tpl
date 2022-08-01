@@ -377,3 +377,89 @@ app.use(router)
 app.mount('#app')
 ```
 ## 集成Pinia
+Pinia是vue官方推荐的vue项目全局状态管理器的库，支持vue2/vue3，对Composition API和typescript具有更好的支持
+### 安装依赖
+```shell
+pnpm add pinia
+```
+### 目录说明
+有关全局状态管理的功能都是store目录中，将不同模块的状态拆分放到modules，好处和route modules的说明一样
+```xml
+.
+├── src # 主目录
+│   ├── main.js # 主入口
+│   ├── store # store配置
+│   │   ├── modules # store模块
+│   │   └── index.ts # store出口
+│   └── views # 页面
+```
+### 使用
+在主入口文件main.ts中创建一个根存储（pinia）并传递到应用程序，可以简单理解为创建一个全局状态桶挂载到应用程序，后面定义的store就相当于放到桶里面，页面/组件就可以去使用了
+```ts
+import { createPinia } from 'pinia'
+
+app.use(createPinia())
+```
+在store/modules创建user.ts文件定义用户相关的store
++ state 可以理解为数据仓库
++ getter 可以理解为计算属性
++ actions 处理业务逻辑的方法，支持异步 
+```ts
+// store/modules/user.ts
+import { defineStore } from 'pinia'
+
+const useUserStore = defineStore('user', {
+  state () {
+    return {
+      name: '昵称',
+      age: 25,
+      sex: '男'
+    }
+  },
+  getters: {
+    getAgeStr: (state) => {
+      return `${state.age}岁`
+    },
+    getNameAndAge ():string {
+      return `${this.name}-${this.getAgeStr}`
+    }
+  },
+  actions: {
+    saveName (name: string) {
+      this.name = name
+    }
+  }
+})
+
+export default useUserStore
+```
+在store/index.ts统一导出store
+```ts
+// store/index.ts
+import useUserStore from './modules/user'
+
+export {
+  useUserStore
+}
+```
+在home页面使用
+```vue
+<!-- views/home/index.vue -->
+<script lang='ts' setup>
+import { useUserStore } from '@/store'
+const store = useUserStore()
+const handleClick = () => {
+  store.saveName('小强')
+}
+</script>
+
+<template>
+  首页
+  <h3>姓名：{{ store.name }}</h3>
+  <h3>年龄：{{ store.age }}</h3>
+  <h3>姓名+年龄：{{ store.getNameAndAge }}</h3>
+  <button @click="handleClick">
+    修改名字
+  </button>
+</template>
+```
