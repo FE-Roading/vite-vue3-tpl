@@ -463,3 +463,71 @@ const handleClick = () => {
   </button>
 </template>
 ```
+## 集成axios
+axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中
+### 安装依赖
+```shell
+pnpm add axios
+```
+### 使用
+新建src/utils/request.ts，对axios进行简单的封装（可根据实际业务扩展）
+```ts
+// src/utils/request.ts
+import axios from 'axios'
+
+const request = axios.create({
+  baseURL: 'http://127.0.0.1:8080'
+})
+
+// 添加请求拦截器
+request.interceptors.request.use(function (config) {
+  // 在发送请求之前做些什么
+  return config
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
+
+// 添加响应拦截器
+request.interceptors.response.use(function (response) {
+  // 2xx 范围内的状态码都会触发该函数。
+  // 对响应数据做点什么
+  return response
+}, function (error) {
+  // 超出 2xx 范围的状态码都会触发该函数。
+  // 对响应错误做点什么
+  return Promise.reject(error)
+})
+
+export default request
+```
+在src新建api文件夹，用于存放所有的接口调用，根据不同模块划分新建文件管理各自模块的接口，这里我们新建demo.ts用于测试上面封装好的request工具函数
+```ts
+// src/demo.ts
+import request from '@/utils/request'
+export interface IUserInfo {
+  username: string,
+  password: string
+}
+export interface IResponseData {
+  msg: string
+}
+export const getUserInfo = (params: IUserInfo) => {
+  return request.get<IResponseData>('/user', { params })
+}
+```
+在home页面使用
+```vue
+<script lang='ts' setup>
+import { getUserInfo } from '@/api/demo.js'
+import { onMounted } from 'vue'
+onMounted(() => {
+  getUserInfo({
+    username: '昵称',
+    password: '123456'
+  }).then(res => {
+    console.log(res.data.msg)
+  })
+})
+</script>
+```
