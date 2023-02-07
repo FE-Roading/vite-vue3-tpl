@@ -6,5 +6,5 @@ const store = createPinia()
 
 export default store
 export {
-  useUserStore,
+  useUserStore
 }

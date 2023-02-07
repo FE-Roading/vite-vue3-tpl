@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import store from "@/store"
+import store from '@/store'
 
-interface UserStoreType  {
+interface UserStoreType {
   name: string
   age: number
   sex: string
@@ -11,7 +11,7 @@ const useUserStore = defineStore('user', {
   state: (): UserStoreType => ({
     name: '昵称',
     age: 25,
-    sex: "男"
+    sex: '男'
   }),
   getters: {
     getAgeStr: (state) => {
@@ -31,6 +31,6 @@ const useUserStore = defineStore('user', {
 export default useUserStore
 
 // Need to be used outside the setup
-export function useUserStoreWithOut() {
-  return useUserStore(store);
+export function useUserStoreWithOut () {
+  return useUserStore(store)
 }

@@ -2,15 +2,15 @@
   "name": "vite-vue-demo",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint src/**/*.{js,jsx,vue,ts,tsx} --fix",
-    "lint:style": "stylelint src/**/*.{css,scss,vue,html} --fix",
+    "lint": "eslint 'src/**/*.{vue,ts,tsx,js,jsx}' --fix",
+    "lint:style": "stylelint 'src/**/*.{css,scss,vue,html}' --fix",
     "prepare": "husky install",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "commit": "git-cz"
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -21,9 +21,12 @@
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
+    "commitizen": "^4.3.0",
+    "commitlint-config-cz": "^0.13.3",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "@vitejs/plugin-vue": "^3.0.0",
+    "cz-customizable": "^7.0.0",
     "eslint": "^8.0.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.25.2",
@@ -53,5 +56,10 @@
       "pnpm lint"
     ],
     "*.{scss,css}": "pnpm lint:style"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
   }
 }

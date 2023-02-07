@@ -4,8 +4,8 @@ import userRoutes from './modules/user'
 import commonRoutes from './modules/common'
 
 const routes = [
-  ...userRoutes, 
-  ...commonRoutes,
+  ...userRoutes,
+  ...commonRoutes
 ]
 
 const router = createRouter({
@@ -15,5 +15,5 @@ const router = createRouter({
 
 export default router
 export {
-  routes,
+  routes
 }
