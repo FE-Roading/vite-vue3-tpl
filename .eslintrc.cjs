@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2022: true
   },
   extends: [
     'plugin:vue/vue3-strongly-recommended',
@@ -22,6 +22,8 @@ module.exports = {
       {
         ignores: ['index']
       }
-    ]
+    ],
+    "no-unused-vars": [0],
+    "eqeqeq": [0]
   }
 }

@@ -1,19 +1,9 @@
 <script lang='ts' setup>
 import { useUserStore } from '@/store'
-import { getUserInfo } from '@/api/demo.js'
-import { onMounted } from 'vue'
 const store = useUserStore()
 const handleClick = () => {
   store.saveName('小强')
 }
-onMounted(() => {
-  getUserInfo({
-    username: '昵称',
-    password: '123456'
-  }).then(res => {
-    console.log(res.data.msg)
-  })
-})
 </script>
 
 <template>
